@@ -28,34 +28,6 @@ next-js-stack/
 └── README.md        # This file
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- PostgreSQL
-- Redis
-- Git
-
-### Frontend Development
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to see the frontend.
-
-### Backend Development
-
-```bash
-cd backend
-npm install
-npm run start:dev
-```
-
-The API will be available at [http://localhost:3001](http://localhost:3001).
-
 ## 🛠️ Tech Stack
 
 ### Frontend

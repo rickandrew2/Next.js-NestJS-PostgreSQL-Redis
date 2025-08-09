@@ -41,38 +41,6 @@ This repository contains my journey learning and experimenting with a modern web
 - **bcryptjs** - Secure password hashing
 - **Jest** - Comprehensive testing framework
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- PostgreSQL
-- Redis
-- Git
-
-### Development Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/rickandrew2/Next.js-NestJS-PostgreSQL-Redis.git
-   cd Next.js-NestJS-PostgreSQL-Redis
-   ```
-
-2. **Start the Backend**
-   ```bash
-   cd backend
-   npm install
-   npm run start:dev
-   ```
-   The API will be available at `http://localhost:3001`
-
-3. **Start the Frontend**
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
-   The frontend will be available at `http://localhost:3000`
-
 ## 📚 Learning Journey
 
 ### What I'm Learning
