@@ -3,16 +3,16 @@ import AboutFooter from './footer';
 
 export default function About() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-900">
       <AboutHeader />
       
       <div className="flex items-center justify-center flex-1">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">About Page</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-4xl font-bold mb-4 text-white">About Page</h1>
+          <p className="text-lg text-gray-300">
             This is the about page. Notice how the URL is /about!
           </p>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm text-gray-400 mt-2">
             This page uses components from the same folder
           </p>
           <a 

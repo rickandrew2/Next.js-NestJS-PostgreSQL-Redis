@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 
 export default function MetadataDemo() {
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold mb-8">Next.js Metadata API</h1>
+    <div className="min-h-screen p-8 bg-gray-900">
+      <h1 className="text-3xl font-bold mb-8 text-white">Next.js Metadata API</h1>
       
       <div className="bg-green-100 p-6 rounded-lg mb-8">
-        <h2 className="text-xl font-bold mb-4">✅ What's happening:</h2>
-        <p>This page automatically generates proper HTML head tags:</p>
+        <h2 className="text-xl font-bold mb-4 text-gray-800">✅ What's happening:</h2>
+        <p className="text-gray-800">This page automatically generates proper HTML head tags:</p>
         <ul className="list-disc list-inside mt-2 space-y-1 text-gray-800 font-mono">
           <li>&lt;title&gt;Metadata Demo - Next.js Learning&lt;/title&gt;</li>
           <li>&lt;meta name="description" content="..."&gt;</li>
@@ -33,38 +33,38 @@ export default function MetadataDemo() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="border p-4 rounded">
-          <h3 className="font-bold mb-2">Traditional React:</h3>
-          <pre className="text-sm bg-gray-200 p-3 rounded text-gray-800 font-mono">
+        <div className="border border-gray-600 p-4 rounded bg-gray-800">
+          <h3 className="font-bold mb-2 text-white">Traditional React:</h3>
+          <pre className="text-sm bg-gray-700 p-3 rounded text-gray-200 font-mono">
 {`// You'd need react-helmet or similar
 <Helmet>
   <title>My Page</title>
   <meta name="description" content="..." />
 </Helmet>`}
           </pre>
-          <p className="text-sm text-gray-800 mt-2 font-medium">
+          <p className="text-sm text-gray-300 mt-2 font-medium">
             ❌ Requires extra library, more setup
           </p>
         </div>
 
-        <div className="border p-4 rounded">
-          <h3 className="font-bold mb-2">Next.js Metadata:</h3>
-          <pre className="text-sm bg-gray-200 p-3 rounded text-gray-800 font-mono">
+        <div className="border border-gray-600 p-4 rounded bg-gray-800">
+          <h3 className="font-bold mb-2 text-white">Next.js Metadata:</h3>
+          <pre className="text-sm bg-gray-700 p-3 rounded text-gray-200 font-mono">
 {`// Just export metadata object
 export const metadata = {
   title: 'My Page',
   description: '...',
 }`}
           </pre>
-          <p className="text-sm text-gray-800 mt-2 font-medium">
+          <p className="text-sm text-gray-300 mt-2 font-medium">
             ✅ Built-in, automatic, type-safe
           </p>
         </div>
       </div>
 
       <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-4">Metadata Benefits:</h2>
-        <ul className="list-disc list-inside space-y-2 text-gray-800">
+        <h2 className="text-2xl font-bold mb-4 text-white">Metadata Benefits:</h2>
+        <ul className="list-disc list-inside space-y-2 text-gray-300">
           <li>🔍 Better SEO out of the box</li>
           <li>📱 Social media sharing (Open Graph)</li>
           <li>🎯 TypeScript support</li>
@@ -74,8 +74,8 @@ export const metadata = {
       </div>
 
       <div className="mt-8 p-4 bg-blue-100 rounded">
-        <h3 className="font-bold mb-2">🔍 Check the page source:</h3>
-        <p>Right-click → "View Page Source" to see the generated HTML head tags!</p>
+        <h3 className="font-bold mb-2 text-gray-800">🔍 Check the page source:</h3>
+        <p className="text-gray-800">Right-click → "View Page Source" to see the generated HTML head tags!</p>
       </div>
 
       <a 
