@@ -12,7 +12,7 @@ import {
   SetMetadata
 } from '@nestjs/common';
 import { PublishedService } from './published.service';
-import type { PublishedEntity } from './published.service';
+import { PublishedEntity } from './entities/published.entity';
 import { CreatePublishedDto } from './dto/create-published.dto';
 import { UpdatePublishedDto } from './dto/update-published.dto';
 import { AuthGuard } from '../auth/auth.guard';
@@ -29,15 +29,15 @@ export class PublishedController {
   // GET /published - Get all published items (PUBLIC - no auth required)
   @Get()
   @Public() // ← This makes it public
-  findAll(): PublishedEntity[] {
+  async findAll(): Promise<PublishedEntity[]> {
     return this.publishedService.findAll();
   }
 
   // GET /published/:id - Get a single published item (PUBLIC - no auth required)
   @Get(':id')
   @Public() // ← This makes it public
-  findOne(@Param('id') id: string): PublishedEntity {
-    const published = this.publishedService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<PublishedEntity> {
+    const published = await this.publishedService.findOne(+id);
     if (!published) {
       throw new HttpException('Published item not found', HttpStatus.NOT_FOUND);
     }
@@ -46,23 +46,23 @@ export class PublishedController {
 
   // POST /published - Create a new published item (PROTECTED - auth required)
   @Post()
-  create(
+  async create(
     @Body() createPublishedDto: CreatePublishedDto,
     @CurrentUser() user: any // ← Get current user (like req.user in MERN)
-  ): PublishedEntity {
+  ): Promise<PublishedEntity> {
     console.log('Creating published item for user:', user);
     return this.publishedService.create(createPublishedDto);
   }
 
   // PUT /published/:id - Update a published item (PROTECTED - auth required)
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: string, 
     @Body() updatePublishedDto: UpdatePublishedDto,
     @CurrentUser() user: any
-  ): PublishedEntity {
+  ): Promise<PublishedEntity> {
     console.log('Updating published item for user:', user);
-    const published = this.publishedService.update(+id, updatePublishedDto);
+    const published = await this.publishedService.update(+id, updatePublishedDto);
     if (!published) {
       throw new HttpException('Published item not found', HttpStatus.NOT_FOUND);
     }
@@ -71,12 +71,12 @@ export class PublishedController {
 
   // DELETE /published/:id - Delete a published item (PROTECTED - auth required)
   @Delete(':id')
-  remove(
+  async remove(
     @Param('id') id: string,
     @CurrentUser() user: any
-  ): { message: string } {
+  ): Promise<{ message: string }> {
     console.log('Deleting published item for user:', user);
-    const deleted = this.publishedService.remove(+id);
+    const deleted = await this.publishedService.remove(+id);
     if (!deleted) {
       throw new HttpException('Published item not found', HttpStatus.NOT_FOUND);
     }

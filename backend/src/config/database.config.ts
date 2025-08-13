@@ -1,6 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CacheModuleOptions } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
 
 export const databaseConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -8,15 +7,18 @@ export const databaseConfig: TypeOrmModuleOptions = {
   port: parseInt(process.env.DB_PORT) || 5432,
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'password',
-  database: process.env.DB_NAME || 'nextjs_stack',
+  database: process.env.DB_NAME || 'postgres',
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  synchronize: process.env.NODE_ENV !== 'production', // Auto-create tables in development
+  synchronize: false, // Temporarily disable to prevent schema conflicts
   logging: process.env.NODE_ENV !== 'production',
+  ssl: {
+    rejectUnauthorized: false
+  },
+  extra: {
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }
 };
 
-export const redisConfig: CacheModuleOptions = {
-  store: redisStore,
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT) || 6379,
-  ttl: 60 * 60 * 24, // 24 hours cache
-};
+// Upstash Redis configuration is now handled in AppModule via redisStore and URL
