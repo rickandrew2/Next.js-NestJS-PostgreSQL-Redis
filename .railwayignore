@@ -1,0 +1,18 @@
+# Exclude everything except backend
+frontend/
+node_modules/
+.git/
+.env
+*.log
+.DS_Store
+README.md
+DEPLOYMENT_GUIDE.md
+RAILWAY_DEPLOYMENT_CHECKLIST.md
+deploy.bat
+deploy.sh
+DOCKER_SETUP.md
+SUPABASE_SETUP.md
+TEAM_SETUP.md
+blog-schema.sql
+sample-blog-data.sql
+.cursorignore
