@@ -34,7 +34,7 @@ async function bootstrap() {
   // Use Railway's PORT or default to 3002
   const port = process.env.PORT || 3002;
   
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   console.log(`🚀 Application is running on: http://localhost:${port}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🗄️ Database: PostgreSQL on ${process.env.DB_HOST}:${process.env.DB_PORT}`);
