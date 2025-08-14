@@ -35,8 +35,9 @@ async function bootstrap() {
   const port = process.env.PORT || 3002;
   
   await app.listen(port, '0.0.0.0');
-  console.log(`🚀 Application is running on: http://localhost:${port}`);
+  console.log(`🚀 Application is running on: http://0.0.0.0:${port}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔌 Port: ${port} (from env: ${process.env.PORT || 'default'})`);
   console.log(`🗄️ Database: PostgreSQL on ${process.env.DB_HOST}:${process.env.DB_PORT}`);
   console.log(`⚡ Cache: Redis on ${process.env.UPSTASH_REDIS_URL}`);
 }
