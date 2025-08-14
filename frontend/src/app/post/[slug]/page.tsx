@@ -84,8 +84,9 @@ async function getPopularPosts(currentPostId: number): Promise<Post[]> {
   }
 }
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
-  const { post, categories } = await getPostData(params.slug);
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const { post, categories } = await getPostData(slug);
   
   if (!post) {
     notFound();

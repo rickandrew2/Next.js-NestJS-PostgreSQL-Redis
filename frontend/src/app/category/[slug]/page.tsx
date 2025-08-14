@@ -64,8 +64,9 @@ async function getCategoryData(slug: string): Promise<{ category: Category | nul
   }
 }
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
-  const { category, posts, categories } = await getCategoryData(params.slug);
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const { category, posts, categories } = await getCategoryData(slug);
   
   if (!category) {
     notFound();
