@@ -2,22 +2,23 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy backend package files
 COPY backend/package*.json ./backend/
 
-# Install dependencies
-RUN npm ci --only=production
-RUN cd backend && npm ci
+# Install backend dependencies
+WORKDIR /app/backend
+RUN npm ci
 
 # Copy source code
+WORKDIR /app
 COPY . .
 
 # Build the backend
-RUN cd backend && npm run build
+WORKDIR /app/backend
+RUN npm run build
 
 # Expose port
 EXPOSE 3002
 
 # Start the application
-CMD ["node", "backend/dist/main.js"]
+CMD ["node", "dist/main.js"]
