@@ -213,7 +213,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             {post.excerpt && (
               <div className="mb-8 p-6 bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500 rounded-r-lg">
                 <p className="text-lg text-slate-700 italic text-body">
-                  "{post.excerpt}"
+                  &ldquo;{post.excerpt}&rdquo;
                 </p>
               </div>
             )}

@@ -44,9 +44,10 @@ interface Post {
 // Fetch blog data
 async function getBlogData() {
   try {
+    const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
     const [postsRes, categoriesRes] = await Promise.all([
-      fetch('http://localhost:3002/posts', { cache: 'no-store' }),
-      fetch('http://localhost:3002/categories', { cache: 'no-store' })
+      fetch(`${api}/posts`, { cache: 'no-store' }),
+      fetch(`${api}/categories`, { cache: 'no-store' })
     ]);
 
     if (!postsRes.ok || !categoriesRes.ok) {
@@ -104,7 +105,7 @@ export default async function HomePage() {
             
             <p className="text-xl sm:text-2xl mb-8 text-slate-200 max-w-3xl mx-auto text-body">
               Get exclusive Roblox tips, Minecraft redstone guides, and anime recommendations that actually work. 
-              Join 10,000+ gamers and anime fans who've already discovered amazing content with our proven guides.
+              Join 10,000+ gamers and anime fans who&apos;ve already discovered amazing content with our proven guides.
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
@@ -572,7 +573,7 @@ export default async function HomePage() {
               <span className="text-sm font-medium text-red-700">Explore Categories</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Browse by Topic</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">Find exactly what you're looking for in our organized content sections</p>
+                            <p className="text-slate-600 max-w-2xl mx-auto">Find exactly what you&apos;re looking for in our organized content sections</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
