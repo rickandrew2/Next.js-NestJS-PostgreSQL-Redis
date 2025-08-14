@@ -1,4 +1,4 @@
-# Use Node.js 18 as base image
+# Use Node.js 18 Alpine for smaller image size
 FROM node:18-alpine
 
 # Set working directory
@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install ALL dependencies (including dev dependencies for building)
+# Install ALL dependencies (including TypeScript for build)
 RUN npm ci
 
 # Copy source code
@@ -20,7 +20,7 @@ RUN npm run build
 RUN npm prune --production
 
 # Expose port
-EXPOSE 3001
+EXPOSE 3002
 
 # Start the application
 CMD ["npm", "run", "start:prod"]
