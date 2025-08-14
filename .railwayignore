@@ -1,10 +1,10 @@
-# Ignore frontend files when deploying backend
-frontend/
-frontend/**
-
-# Ignore root package.json that tries to build both
+# Completely ignore root package.json that causes build issues
 package.json
 package-lock.json
+
+# Ignore frontend completely
+frontend/
+frontend/**
 
 # Ignore deployment files
 DEPLOYMENT_GUIDE.md
