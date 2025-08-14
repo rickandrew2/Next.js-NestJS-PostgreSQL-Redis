@@ -13,9 +13,9 @@ RUN npm ci
 WORKDIR /app
 COPY . .
 
-# Build the backend using npx to run local TypeScript
+# Build the backend - ensure TypeScript is executable
 WORKDIR /app/backend
-RUN npx tsc
+RUN chmod +x node_modules/.bin/tsc && npm run build
 
 # Expose port
 EXPOSE 3002
