@@ -1,0 +1,39 @@
+# Ignore frontend files when deploying backend
+frontend/
+frontend/**
+
+# Ignore root package.json that tries to build both
+package.json
+package-lock.json
+
+# Ignore deployment files
+DEPLOYMENT_GUIDE.md
+RAILWAY_DEPLOYMENT_CHECKLIST.md
+deploy.bat
+deploy.sh
+
+# Ignore development files
+node_modules/
+.env
+.env.local
+.env.development
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore build artifacts
+dist/
+build/
+.next/
+out/
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
