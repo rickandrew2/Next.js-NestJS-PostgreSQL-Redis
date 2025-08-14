@@ -5,8 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
-import { Search, TrendingUp, Clock, Eye, Zap, Shield, Smartphone, Sparkles } from 'lucide-react';
+import { TrendingUp, Clock, Eye, Zap, Shield, Smartphone, Sparkles, Menu, X } from 'lucide-react';
 import { Carousel } from '@/components/ui/carousel';
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
 
 // Types for our data
 interface Category {
@@ -37,20 +39,7 @@ interface Post {
   updated_at: string;
 }
 
-// Cute mascot emoji per category with fallback
-const categoryEmoji: Record<string, string> = {
-  roblox: '🧱',
-  minecraft: '⛏️',
-  anime: '🎌',
-  fortnite: '🎯',
-  genshin: '✨',
-  pokemon: '⚡',
-};
 
-function getCategoryEmoji(category: Category): string {
-  const key = (category.slug || category.name || '').toLowerCase();
-  return categoryEmoji[key] || '🎮';
-}
 
 // Fetch blog data
 async function getBlogData() {
@@ -88,399 +77,482 @@ export default async function HomePage() {
   const imagePosts = posts.filter((p) => Boolean(p.featured_image)).slice(0, 12);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card sticky top-0 z-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-red-600 to-orange-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">F</span>
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-foreground">FunVault</h1>
-                  <p className="text-xs text-muted-foreground">Fun for Roblox • Minecraft • Anime</p>
-                </div>
-              </Link>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-red-50">
+      <Navigation categories={categories} />
+
+      {/* Hero Section - Magazine Style */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700 text-white">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
+          <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
+              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+              <span className="text-sm font-medium">🔥 New: Latest Gaming Tips & Anime Reviews Just Added</span>
             </div>
             
-            {/* Search Bar */}
-            <div className="hidden md:flex items-center space-x-2 max-w-md w-full mx-4">
-              <div className="relative w-full">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Search articles..."
-                  className="pl-10 bg-muted/50 border-0 focus:bg-background"
-                />
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl text-hero mb-6 leading-tight">
+              Level Up Your
+              <span className="block bg-gradient-to-r from-yellow-300 via-orange-300 to-red-300 bg-clip-text text-transparent mt-2">
+                Gaming & Anime Journey
+              </span>
+            </h1>
+            
+            <p className="text-xl sm:text-2xl mb-8 text-slate-200 max-w-3xl mx-auto text-body">
+              Get exclusive Roblox tips, Minecraft redstone guides, and anime recommendations that actually work. 
+              Join 10,000+ gamers and anime fans who've already discovered amazing content with our proven guides.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+              <Button asChild size="lg" className="bg-white text-red-900 hover:bg-slate-100 text-lg px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                <Link href="#featured">Get Free Tips Now</Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4 rounded-xl backdrop-blur-sm">
+                <Link href="#categories">See All Guides</Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4 rounded-xl backdrop-blur-sm">
+                <Link href="/#newsletter">Get Weekly Updates</Link>
+              </Button>
+            </div>
+            
+            {/* Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto">
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">{posts.length}+</div>
+                <div className="text-sm text-slate-300">Articles</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-orange-300">{categories.length}</div>
+                <div className="text-sm text-slate-300">Categories</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-red-300">24/7</div>
+                <div className="text-sm text-slate-300">Updated</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">100%</div>
+                <div className="text-sm text-slate-300">Family Safe</div>
               </div>
             </div>
-
-            <nav className="hidden lg:flex items-center space-x-6">
-              <Link href="/" className="text-muted-foreground hover:text-red-600 transition-colors font-medium">Home</Link>
-              <details className="relative">
-                <summary className="list-none cursor-pointer text-muted-foreground hover:text-red-600 transition-colors font-medium inline-flex items-center gap-1">
-                  Games <span className="text-xs">▼</span>
-                </summary>
-                <div className="absolute z-50 right-2 sm:right-0 mt-2 w-[calc(100vw-2rem)] sm:w-[420px] md:w-[500px] p-3 rounded-lg bg-card shadow-lg border">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {categories.slice(0, 6).map((c) => (
-                      <Link key={c.id} href={`/category/${c.slug}`} className="flex items-center gap-2 p-2 rounded-md hover:bg-red-50">
-                        <div className="w-8 h-8 rounded-md bg-gradient-to-br from-red-600/10 to-orange-500/10 flex items-center justify-center text-lg">
-                          <span>{getCategoryEmoji(c)}</span>
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-medium text-sm truncate">{c.name}</p>
-                          <p className="text-xs text-muted-foreground truncate">{c.description}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="mt-2 text-right">
-                    <Link href="#categories" className="text-xs sm:text-sm text-red-600 hover:text-red-700">All categories →</Link>
-                  </div>
-                </div>
-              </details>
-              <Link href="/blog" className="text-muted-foreground hover:text-red-600 transition-colors font-medium">Blog</Link>
-              <Link href="/about" className="text-muted-foreground hover:text-red-600 transition-colors font-medium">About</Link>
-              <Link href="/contact" className="text-muted-foreground hover:text-red-600 transition-colors font-medium">Contact</Link>
-              <Link href="/privacy-policy" className="text-muted-foreground hover:text-red-600 transition-colors font-medium">Privacy</Link>
-            </nav>
-          </div>
-        </div>
-        {/* Mobile nav */}
-        <div className="lg:hidden border-t">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-            <details className="w-full">
-              <summary className="list-none cursor-pointer text-sm text-muted-foreground flex items-center justify-between">
-                Menu <span className="text-xs">▼</span>
-              </summary>
-              <div className="mt-3 grid gap-1">
-                <Link href="/" className="p-2 rounded hover:bg-red-50">Home</Link>
-                <Link href="/blog" className="p-2 rounded hover:bg-red-50">Blog</Link>
-                <details>
-                  <summary className="p-2 rounded hover:bg-red-50 cursor-pointer">Games</summary>
-                  <div className="mt-1 grid grid-cols-2 sm:grid-cols-3 gap-1">
-                    {categories.map((c) => (
-                      <Link key={c.id} href={`/category/${c.slug}`} className="p-2 rounded hover:bg-red-50 flex items-center gap-2 text-sm">
-                        <span className="text-base">{getCategoryEmoji(c)}</span>
-                        <span className="truncate">{c.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </details>
-                <Link href="/about" className="p-2 rounded hover:bg-red-50">About</Link>
-                <Link href="/contact" className="p-2 rounded hover:bg-red-50">Contact</Link>
-                <Link href="/privacy-policy" className="p-2 rounded hover:bg-red-50">Privacy</Link>
-              </div>
-            </details>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-red-600 via-red-500 to-orange-500 text-white py-20">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge variant="secondary" className="mb-4 bg-gradient-to-r from-red-500/30 to-orange-500/30 text-white border-white/30 backdrop-blur-sm">
-            🎉 Welcome to FunVault
-          </Badge>
-          <h2 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Unlock the Fun with
-            <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-              Family‑Friendly Guides & Picks
-            </span>
-          </h2>
-          <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto leading-relaxed">
-            Safe, speedy, and kid‑approved guides for games, shows, and creative fun—no pop‑ups, just play.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            <Button asChild className="bg-white text-red-600 hover:bg-white/90">
-              <Link href="/blog">Explore Posts</Link>
-            </Button>
-            <Button variant="outline" asChild className="border-white/40 text-white hover:bg-white/10">
-              <Link href="#categories">Browse Categories</Link>
-            </Button>
-          </div>
-          <div className="flex items-center justify-center gap-6 text-sm opacity-90">
-            <div className="flex items-center gap-2"><Zap className="h-4 w-4" /> Fast Loads</div>
-            <div className="flex items-center gap-2"><Shield className="h-4 w-4" /> No Pop‑ups</div>
-            <div className="flex items-center gap-2"><Smartphone className="h-4 w-4" /> Mobile Ready</div>
-          </div>
-          <div className="flex items-center justify-center space-x-8 text-sm opacity-75 mt-6">
-            <div className="flex items-center space-x-2"><TrendingUp className="h-4 w-4" /><span>{posts.length}+ Articles</span></div>
-            <div className="flex items-center space-x-2"><Eye className="h-4 w-4" /><span>Updated Regularly</span></div>
           </div>
         </div>
       </section>
 
-      {/* Trending Strip */}
-      {trendingPosts.length > 0 && (
-        <section className="border-b bg-card/50">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="h-4 w-4 text-red-600" />
-              <p className="text-sm font-medium text-foreground">Trending Now</p>
+      {/* Quick Action Bar */}
+      <div className="bg-white border-b border-slate-200">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <div className="flex items-center gap-2 text-slate-600">
+              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+              <span>Latest content updated daily</span>
             </div>
-            <div className="flex gap-3 overflow-x-auto py-1">
-              {trendingPosts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/post/${post.slug}`}
-                  className="flex-shrink-0 px-3 py-2 rounded-full bg-muted hover:bg-red-50 text-sm text-foreground transition-colors border border-transparent hover:border-red-200"
-                  title={post.title}
-                >
-                  {post.title}
-                </Link>
-              ))}
+            <div className="flex items-center gap-2 text-slate-600">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              <span>Free gaming guides & tips</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-600">
+              <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
+              <span>Family-friendly content</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Featured Post - Magazine Style */}
+      {featuredPost && (
+        <section id="featured" className="py-16 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 mb-4">
+                  <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                  <span className="text-sm font-medium text-red-700">Featured Article</span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl text-heading text-slate-800 mb-4">Today's Top Story</h2>
+                <p className="text-slate-600 max-w-2xl mx-auto">Discover our most popular content and latest gaming insights</p>
+              </div>
+              
+              <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                <div className="relative group">
+                  {featuredPost.featured_image && (
+                    <div className="relative h-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl group-hover:shadow-3xl transition-all duration-500">
+                      <Image
+                        src={featuredPost.featured_image}
+                        alt={featuredPost.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <Badge className="bg-red-700 text-white border-0">
+                          {categories.find((c) => c.id === featuredPost.category_id)?.name || 'Featured'}
+                        </Badge>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4 text-sm text-slate-500">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      <span>{new Date(featuredPost.published_at).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Eye className="h-4 w-4" />
+                      <span>{featuredPost.view_count} views</span>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800 leading-tight">
+                    <Link href={`/post/${featuredPost.slug}`} className="hover:text-red-700 transition-colors">
+                      {featuredPost.title}
+                    </Link>
+                  </h3>
+                  
+                  <p className="text-lg text-slate-600 leading-relaxed">
+                    {featuredPost.excerpt || featuredPost.content.substring(0, 200)}...
+                  </p>
+                  
+                  <div className="flex items-center gap-4">
+                    <Button asChild size="lg" className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                      <Link href={`/post/${featuredPost.slug}`}>
+                        Read Full Article →
+                      </Link>
+                    </Button>
+                    <Button variant="outline" size="lg" asChild className="border-slate-300 text-slate-700 hover:bg-red-50 px-8 py-3 rounded-xl">
+                      <Link href={`/category/${categories.find((c) => c.id === featuredPost.category_id)?.slug}`}>
+                        More {categories.find((c) => c.id === featuredPost.category_id)?.name} →
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
       )}
 
       {/* AdSense Banner - Top */}
-      <div className="bg-muted py-6">
+      <div className="bg-slate-50 py-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="border-dashed border-2">
+          <Card className="border-dashed border-2 border-slate-300 bg-white/50">
             <CardContent className="p-8 text-center">
-              <p className="text-sm text-muted-foreground font-medium">AdSense Banner - Top</p>
-              <p className="text-xs text-muted-foreground mt-1">728x90 or 320x50 for mobile</p>
+              <p className="text-sm text-slate-600 font-medium">AdSense Banner - Top</p>
+              <p className="text-xs text-slate-500 mt-1">728x90 or 320x50 for mobile</p>
             </CardContent>
           </Card>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Featured Post */}
-        {featuredPost && (
-          <section className="mb-16">
-            <div className="flex items-center space-x-2 mb-8">
-              <Badge variant="destructive" className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 shadow-lg">🔥 Featured</Badge>
-              <h2 className="text-2xl font-bold text-foreground">Featured Article</h2>
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Editor's Picks - Magazine Style */}
+        <section className="mb-20">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 mb-4">
+              <Sparkles className="h-4 w-4 text-red-600" />
+              <span className="text-sm font-medium text-red-700">Editor's Picks</span>
             </div>
-            <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 border-red-200 hover:border-red-300 bg-gradient-to-br from-white to-red-50">
-              <div className="grid md:grid-cols-2 gap-0">
-                {featuredPost.featured_image && (
-                  <div className="relative h-64 md:h-full">
-                    <Image
-                      src={featuredPost.featured_image}
-                      alt={featuredPost.title}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                )}
-                <div className="p-8 flex flex-col justify-center">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <Badge variant="secondary" className="bg-gradient-to-r from-red-100 to-red-200 text-red-800 hover:from-red-200 hover:to-red-300 border-red-300">
-                      {categories.find((c) => c.id === featuredPost.category_id)?.name || 'Gaming'}
-                    </Badge>
-                    <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
-                      <span>{new Date(featuredPost.published_at).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <CardTitle className="text-3xl mb-4 leading-tight">
-                    <Link href={`/post/${featuredPost.slug}`} className="hover:text-red-600 transition-colors group">
-                      <span className="bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent group-hover:from-red-700 group-hover:to-red-600">
-                        {featuredPost.title}
-                      </span>
-                    </Link>
-                  </CardTitle>
-                  <CardDescription className="text-lg mb-6 leading-relaxed">
-                    {featuredPost.excerpt || featuredPost.content.substring(0, 200)}...
-                  </CardDescription>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center space-x-1">
-                        <Eye className="h-4 w-4" />
-                        <span>{featuredPost.view_count} views</span>
-                      </div>
-                    </div>
-                    <Button asChild className="bg-red-600 hover:bg-red-700">
-                      <Link href={`/post/${featuredPost.slug}`}>
-                        Read Full Article →
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </section>
-        )}
-
-        {/* AdSense Banner - Middle */}
-        <div className="bg-muted py-6 mb-16">
-          <Card className="border-dashed border-2">
-            <CardContent className="p-8 text-center">
-              <p className="text-sm text-muted-foreground font-medium">AdSense Banner - Middle</p>
-              <p className="text-xs text-muted-foreground mt-1">728x90 or 320x50 for mobile</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent Posts & Popular Posts */}
-        <div className="grid lg:grid-cols-3 gap-12 mb-16">
-          {/* Editor's Picks */}
-          <div className="lg:col-span-3">
-            <div className="flex items-center justify-between mb-6 px-2 md:px-0">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-red-600" />
-                <h2 className="text-2xl font-bold text-foreground">Editor’s Picks</h2>
-              </div>
-              <Link href="/blog" className="text-sm text-red-600 hover:text-red-700">See all</Link>
-            </div>
-          <Carousel ariaLabel="Editors Picks Carousel" className="-mx-3" itemClassName="min-w-[280px] sm:min-w-[320px]">
+                            <h2 className="text-3xl sm:text-4xl text-heading text-slate-800 mb-4">Must-Read Articles</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">Handpicked content from our gaming experts</p>
+          </div>
+          
+          <Carousel ariaLabel="Editors Picks Carousel" className="-mx-3" itemClassName="min-w-[320px] sm:min-w-[380px]">
             {editorsPicks.map((post) => (
-              <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow border-red-100">
-                {post.featured_image && (
-                  <div className="relative h-40">
-                    <Image src={post.featured_image} alt={post.title} fill className="object-cover" />
+              <Card key={post.id} className="overflow-hidden hover:shadow-2xl transition-all duration-500 border-0 shadow-lg group h-[500px] flex flex-col">
+                <Link href={`/post/${post.slug}`}>
+                  <div className="relative h-48 overflow-hidden flex-shrink-0">
+                    {post.featured_image ? (
+                      <Image 
+                        src={post.featured_image} 
+                        alt={post.title} 
+                        fill 
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        sizes="(max-width: 768px) 320px, 380px"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center">
+                        <span className="text-4xl">🎮</span>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-red-700 text-white border-0">
+                        {categories.find((c) => c.id === post.category_id)?.name || 'Featured'}
+                      </Badge>
+                    </div>
                   </div>
-                )}
-                <CardHeader className="py-4">
-                  <CardTitle className="text-base line-clamp-2">
-                    <Link href={`/post/${post.slug}`} className="hover:text-red-600 transition-colors">
+                  <CardContent className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-center gap-2 mb-3 text-sm text-slate-500 flex-shrink-0">
+                      <Clock className="h-4 w-4" />
+                      <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                      <span>•</span>
+                      <Eye className="h-4 w-4" />
+                      <span>{post.view_count} views</span>
+                    </div>
+                    <CardTitle className="text-xl mb-3 line-clamp-2 group-hover:text-red-700 transition-colors flex-shrink-0">
                       {post.title}
-                    </Link>
-                  </CardTitle>
-                </CardHeader>
+                    </CardTitle>
+                    <CardDescription className="line-clamp-3 mb-4 text-slate-600 flex-1">
+                      {post.excerpt || post.content.substring(0, 120)}...
+                    </CardDescription>
+                    <div className="text-red-700 hover:text-red-800 transition-colors font-medium mt-auto flex-shrink-0">
+                      Read More →
+                    </div>
+                  </CardContent>
+                </Link>
               </Card>
             ))}
           </Carousel>
-          </div>
+        </section>
 
-          {/* Recent Posts */}
+        {/* Latest Articles & Sidebar */}
+        <div className="grid lg:grid-cols-3 gap-12 mb-20">
+          {/* Latest Articles */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-8">
-              <Clock className="h-5 w-5 text-red-600" />
-              <h2 className="text-2xl font-bold text-foreground">Latest Articles</h2>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-1 h-8 bg-gradient-to-b from-red-600 to-red-800 rounded-full"></div>
+              <div>
+                <h2 className="text-2xl sm:text-3xl text-heading text-slate-800">Latest Articles</h2>
+                <p className="text-slate-600">Fresh content from our gaming community</p>
+              </div>
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {recentPosts.map((post) => (
-                <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow border-red-50">
-                  {post.featured_image && (
-                    <div className="relative h-48">
-                      <Image
-                        src={post.featured_image}
-                        alt={post.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-3">
-                      <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300">
-                        {categories.find((c) => c.id === post.category_id)?.name || 'Gaming'}
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(post.published_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <CardTitle className="text-lg line-clamp-2">
-                      <Link href={`/post/${post.slug}`} className="hover:text-red-600 transition-colors group">
-                        <span className="group-hover:text-red-600">{post.title}</span>
+            
+            <div className="space-y-8">
+              {recentPosts.map((post, index) => (
+                <article key={post.id} className="group">
+                  <div className="grid md:grid-cols-2 gap-6 items-center">
+                    {post.featured_image && (
+                      <Link href={`/post/${post.slug}`}>
+                        <div className="relative h-48 md:h-64 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
+                          <Image
+                            src={post.featured_image}
+                            alt={post.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                          <div className="absolute top-4 left-4">
+                            <Badge className="bg-red-700 text-white border-0">
+                              {categories.find((c) => c.id === post.category_id)?.name || 'Gaming'}
+                            </Badge>
+                          </div>
+                        </div>
                       </Link>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="line-clamp-3 mb-4">
-                      {post.excerpt || post.content.substring(0, 120)}...
-                    </CardDescription>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                        <Eye className="h-3 w-3" />
-                        <span>{post.view_count}</span>
-                      </div>
-                      <Button variant="ghost" size="sm" asChild className="text-red-600 hover:text-red-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-300">
-                        <Link href={`/post/${post.slug}`}>
-                          Read More →
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Popular Posts Sidebar */}
-          <div>
-            <div className="flex items-center space-x-2 mb-8">
-              <TrendingUp className="h-5 w-5 text-red-600" />
-              <h2 className="text-2xl font-bold text-foreground">Popular Posts</h2>
-            </div>
-            <div className="space-y-6">
-              {popularPosts.map((post, index) => (
-                <Card key={post.id} className="hover:shadow-lg transition-all duration-300 border-red-100 hover:border-red-200">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start space-x-3">
-                      <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-red-100 to-red-200 rounded-full flex items-center justify-center border border-red-300">
-                        <span className="text-red-600 font-bold text-sm">{index + 1}</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base line-clamp-2">
-                          <Link href={`/post/${post.slug}`} className="hover:text-red-600 transition-colors">
-                            {post.title}
-                          </Link>
-                        </CardTitle>
-                        <div className="flex items-center space-x-2 mt-2 text-xs text-muted-foreground">
-                          <Eye className="h-3 w-3" />
+                    )}
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4 text-sm text-slate-500">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          <span>{new Date(post.published_at).toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Eye className="h-4 w-4" />
                           <span>{post.view_count} views</span>
-                          <span>•</span>
-                          <span>{new Date(post.published_at).toLocaleDateString()}</span>
                         </div>
                       </div>
+                      
+                      <h3 className="text-xl sm:text-2xl font-bold text-slate-800 group-hover:text-red-700 transition-colors leading-tight">
+                        <Link href={`/post/${post.slug}`}>
+                          {post.title}
+                        </Link>
+                      </h3>
+                      
+                      <p className="text-slate-600 leading-relaxed line-clamp-3">
+                        {post.excerpt || post.content.substring(0, 150)}...
+                      </p>
+                      
+                      <div className="flex items-center gap-4">
+                        <Button asChild size="sm" className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-lg">
+                          <Link href={`/post/${post.slug}`}>
+                            Read Article →
+                          </Link>
+                        </Button>
+                        <Button variant="ghost" size="sm" asChild className="text-slate-600 hover:text-red-700">
+                          <Link href={`/category/${categories.find((c) => c.id === post.category_id)?.slug}`}>
+                            More {categories.find((c) => c.id === post.category_id)?.name}
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
-                  </CardHeader>
-                </Card>
+                  </div>
+                  
+                  {index < recentPosts.length - 1 && (
+                    <div className="border-b border-slate-200 mt-8"></div>
+                  )}
+                </article>
               ))}
             </div>
+          </div>
 
-            {/* Categories Sidebar */}
-            <div className="mt-12">
-              <h3 className="text-lg font-bold text-foreground mb-4">Categories</h3>
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            {/* Popular Posts */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-6 bg-gradient-to-b from-red-600 to-red-800 rounded-full"></div>
+                <h3 className="text-xl font-bold text-slate-800">Popular Posts</h3>
+              </div>
+              
+              <div className="space-y-4">
+                {popularPosts.map((post, index) => (
+                  <Card key={post.id} className="hover:shadow-lg transition-all duration-300 border-slate-200 group">
+                    <Link href={`/post/${post.slug}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg flex items-center justify-center border border-red-300">
+                            <span className="text-red-700 font-bold text-sm">{index + 1}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <CardTitle className="text-sm font-semibold line-clamp-2 group-hover:text-red-700 transition-colors">
+                              {post.title}
+                            </CardTitle>
+                            <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
+                              <Eye className="h-3 w-3" />
+                              <span>{post.view_count} views</span>
+                              <span>•</span>
+                              <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Categories */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-6 bg-gradient-to-b from-red-600 to-red-800 rounded-full"></div>
+                <h3 className="text-xl font-bold text-slate-800">Categories</h3>
+              </div>
+              
               <div className="space-y-2">
                 {categories.map((category) => (
                   <Link
                     key={category.id}
                     href={`/category/${category.slug}`}
-                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 transition-all duration-300 border border-transparent hover:border-red-200"
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-red-50 transition-all duration-300 border border-transparent hover:border-red-200 group"
                   >
-                    <span className="font-medium">{category.name}</span>
-                    <Badge variant="outline" className="text-xs">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">🎮</span>
+                      <span className="font-medium text-slate-700 group-hover:text-red-700 transition-colors">{category.name}</span>
+                    </div>
+                    <Badge variant="outline" className="text-xs bg-red-50 border-red-200 text-red-700">
                       {posts.filter(p => p.category_id === category.id).length}
                     </Badge>
                   </Link>
                 ))}
               </div>
             </div>
+
+            {/* Newsletter Signup */}
+            <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-2xl p-6 border border-red-200">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white text-xl">📧</span>
+                </div>
+                <h4 className="text-lg font-bold text-slate-800 mb-2">Stay Updated</h4>
+                <p className="text-slate-600 text-sm mb-4">
+                  Get the latest gaming content delivered to your inbox.
+                </p>
+                <div className="space-y-3">
+                  <Input placeholder="Your email" className="border-red-300 focus:border-red-600" />
+                  <Button className="w-full bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-lg">
+                    Subscribe
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Image Reel */}
-        {imagePosts.length > 0 && (
+        {/* Trending Topics */}
+        {trendingPosts.length > 0 && (
           <section className="mb-16">
-            <div className="flex items-center gap-2 mb-4">
-              <Image src="/globe.svg" alt="fun vault" width={20} height={20} />
-              <h3 className="text-lg font-bold text-foreground">Image Highlights</h3>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-1 h-8 bg-gradient-to-b from-red-600 to-red-800 rounded-full"></div>
+              <div>
+                <h2 className="text-2xl sm:text-3xl text-heading text-slate-800">Trending Now</h2>
+                <p className="text-slate-600">Most popular articles this week</p>
+              </div>
             </div>
-            <Carousel ariaLabel="Image Highlights Carousel" className="-mx-3" itemClassName="min-w-[180px] sm:min-w-[220px] md:min-w-[240px]">
-              {imagePosts.map((post) => (
-                <Link key={post.id} href={`/post/${post.slug}`} className="group block">
-                  <div className="relative h-24 md:h-32 rounded-lg overflow-hidden ring-1 ring-red-100 group-hover:ring-red-300 transition">
-                    <Image src={post.featured_image!} alt={post.title} fill className="object-cover" />
-                  </div>
-                  <p className="mt-2 text-xs md:text-sm line-clamp-2 text-foreground/80 group-hover:text-red-600 transition">
-                    {post.title}
-                  </p>
-                </Link>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {trendingPosts.slice(0, 4).map((post) => (
+                <Card key={post.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
+                  <Link href={`/post/${post.slug}`}>
+                    <div className="relative h-48 overflow-hidden">
+                      {post.featured_image ? (
+                        <Image
+                          src={post.featured_image}
+                          alt={post.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center">
+                          <span className="text-3xl">🎮</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <Badge className="bg-red-700 text-white border-0">
+                          {categories.find((c) => c.id === post.category_id)?.name || 'Trending'}
+                        </Badge>
+                      </div>
+                    </div>
+                    <CardContent className="p-4">
+                      <CardTitle className="text-sm font-bold text-slate-800 mb-2 group-hover:text-red-700 transition-colors line-clamp-2">
+                        {post.title}
+                      </CardTitle>
+                      <div className="flex items-center gap-2 text-xs text-slate-500">
+                        <Eye className="h-3 w-3" />
+                        <span>{post.view_count} views</span>
+                        <span>•</span>
+                        <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                      </div>
+                    </CardContent>
+                  </Link>
+                </Card>
               ))}
-            </Carousel>
+            </div>
           </section>
         )}
+
+        {/* AdSense Banner - Natural Integration */}
+        <div className="mb-16">
+          <div className="bg-gradient-to-br from-slate-50 to-red-50 rounded-2xl p-8 border border-slate-200">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-slate-800 mb-2">Sponsored Content</h3>
+              <p className="text-sm text-slate-600 mb-4">Discover amazing gaming products and services</p>
+              <div className="bg-white rounded-lg p-6 border-2 border-dashed border-slate-300">
+                <p className="text-sm text-slate-600 font-medium">AdSense Banner - 728x90</p>
+                <p className="text-xs text-slate-500 mt-1">Responsive ad unit</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         {/* AdSense Banner - Bottom */}
         <div className="bg-muted py-6 mb-16">
@@ -493,117 +565,131 @@ export default async function HomePage() {
         </div>
 
         {/* Categories Section */}
-        <section id="categories" className="mb-16">
-          <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Browse by Category</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section id="categories" className="mb-20">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 mb-4">
+              <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+              <span className="text-sm font-medium text-red-700">Explore Categories</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">Browse by Topic</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto">Find exactly what you're looking for in our organized content sections</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category) => (
-              <Card key={category.id} className="hover:shadow-lg transition-shadow group border-red-50">
-                <CardHeader className="text-center">
-                  <div className="relative mx-auto mb-4 w-24 h-24 rounded-xl overflow-hidden ring-1 ring-red-200 group-hover:ring-red-300 transition">
-                    {category.image_url ? (
-                      <Image src={category.image_url} alt={category.name} fill className="object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-r from-red-600 to-orange-500 flex items-center justify-center text-3xl">
-                        <span>{getCategoryEmoji(category)}</span>
+              <Card key={category.id} className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden h-80 relative">
+                <div className="relative h-full">
+                  {category.image_url ? (
+                    <Image 
+                      src={category.image_url} 
+                      alt={category.name} 
+                      fill 
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-red-600 via-red-700 to-red-800 flex items-center justify-center">
+                      <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-4xl backdrop-blur-sm">
+                        <span>🎮</span>
                       </div>
-                    )}
+                    </div>
+                  )}
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  
+                  {/* Content */}
+                  <div className="absolute inset-0 p-6 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-red-200 transition-colors">
+                          {category.name.toUpperCase()}
+                        </h3>
+                        <p className="text-white/80 text-sm leading-relaxed line-clamp-2">
+                          {category.description}
+                        </p>
+                      </div>
+                      
+                      {/* Article Count Badge */}
+                      <div className="flex-shrink-0 ml-4">
+                        <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
+                          <span className="text-white font-bold text-sm">
+                            {posts.filter(p => p.category_id === category.id).length}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Bottom Section */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/70 text-sm font-medium">
+                        {posts.filter(p => p.category_id === category.id).length} Articles
+                      </span>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        asChild 
+                        className="text-white hover:text-red-200 hover:bg-white/10 p-2 rounded-lg transition-all duration-300"
+                      >
+                        <Link href={`/category/${category.slug}`}>
+                          Explore →
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
-                  <CardTitle className="text-xl">{category.name}</CardTitle>
-                  <CardDescription className="text-center">{category.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <Button variant="outline" asChild className="w-full border-red-200 text-red-600 hover:bg-red-50">
-                    <Link href={`/category/${category.slug}`}>
-                      View {posts.filter(p => p.category_id === category.id).length} Posts →
-                    </Link>
-                  </Button>
-                </CardContent>
+                  
+                  {/* Hover Effect Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-red-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
               </Card>
             ))}
+          </div>
+          
+          {/* View All Categories Button */}
+          <div className="text-center mt-12">
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Link href="#featured">
+                View All Categories
+              </Link>
+            </Button>
           </div>
         </section>
 
         {/* Call to Action Section */}
-        <section className="mb-16">
-          <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-8 border border-red-200 text-center">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Join Our Gaming Community!</h2>
-            <p className="text-xl text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Stay updated with the latest Roblox tips, Minecraft guides, and anime recommendations. 
-              Never miss out on exciting gaming content!
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button size="lg" className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 shadow-lg">
-                🎮 Start Gaming Now
-              </Button>
-              <Button variant="outline" size="lg" className="border-red-200 text-red-600 hover:bg-red-50">
-                📧 Subscribe to Newsletter
-              </Button>
+        <section className="mb-20">
+          <div className="relative overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700 rounded-3xl p-8 sm:p-12 lg:p-16 text-white">
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
+              <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
+            </div>
+            
+            <div className="relative text-center max-w-3xl mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <span className="text-2xl">🎮</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Join Our Gaming Community!</h2>
+              <p className="text-xl text-slate-200 mb-8 leading-relaxed">
+                Stay updated with the latest Roblox tips, Minecraft guides, and anime recommendations. 
+                Never miss out on exciting gaming content!
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <Button size="lg" asChild className="bg-white text-red-900 hover:bg-slate-100 text-lg px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300">
+                  <Link href="#featured">Start Reading Now</Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4 rounded-xl backdrop-blur-sm">
+                  <Link href="#newsletter">Subscribe to Newsletter</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-card border-t">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-red-600 to-orange-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">F</span>
-                </div>
-                <h3 className="text-lg font-bold">FunVault</h3>
-              </div>
-              <p className="text-muted-foreground mb-4">
-                Your ultimate source for Roblox, Minecraft, and Anime content. Stay updated with the latest family‑friendly trends and tips.
-              </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-muted-foreground hover:text-red-600 transition-colors">Twitter</a>
-                <a href="#" className="text-muted-foreground hover:text-red-600 transition-colors">YouTube</a>
-                <a href="#" className="text-muted-foreground hover:text-red-600 transition-colors">Discord</a>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Categories</h4>
-              <ul className="space-y-2">
-                {categories.map((category) => (
-                  <li key={category.id}>
-                    <Link
-                      href={`/category/${category.slug}`}
-                      className="text-muted-foreground hover:text-red-600 transition-colors"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Pages</h4>
-              <ul className="space-y-2">
-                <li><Link href="/" className="text-muted-foreground hover:text-red-600 transition-colors">Home</Link></li>
-                <li><Link href="/about" className="text-muted-foreground hover:text-red-600 transition-colors">About</Link></li>
-                <li><Link href="/contact" className="text-muted-foreground hover:text-red-600 transition-colors">Contact</Link></li>
-                <li><Link href="/privacy-policy" className="text-muted-foreground hover:text-red-600 transition-colors">Privacy Policy</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4">Newsletter</h4>
-              <p className="text-muted-foreground mb-4">
-                Get the latest gaming content delivered to your inbox.
-              </p>
-              <div className="flex space-x-2">
-                <Input placeholder="Your email" className="flex-1 border-red-200 focus:border-red-500" />
-                <Button size="sm" className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 shadow-lg">Subscribe</Button>
-              </div>
-            </div>
-          </div>
-          <Separator className="my-8" />
-          <div className="text-center text-muted-foreground">
-            <p>&copy; 2024 FunVault. All rights reserved. | Built with Next.js & shadcn/ui</p>
-          </div>
-        </div>
-      </footer>
+      <Footer categories={categories} />
     </div>
   );
 }
