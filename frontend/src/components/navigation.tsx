@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { MobileNav } from '@/components/mobile-nav';
-import { Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Search, Menu, X, Sparkles } from 'lucide-react';
 
 interface Category {
   id: number;
@@ -12,8 +14,6 @@ interface Category {
   slug: string;
   description: string;
   image_url?: string;
-  created_at: string;
-  updated_at: string;
 }
 
 interface NavigationProps {
@@ -21,98 +21,192 @@ interface NavigationProps {
 }
 
 export function Navigation({ categories }: NavigationProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/50 shadow-sm">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          <div className="flex items-center space-x-4">
-            <Link href="/" className="flex items-center space-x-3 group">
+    <>
+      {/* Simple Clean Navigation Bar */}
+      <nav className="bg-gradient-to-r from-red-900 to-red-800 text-white shadow-xl border-b-2 border-white/30 sticky top-0 z-40">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            
+            {/* Logo Section */}
+            <Link href="/" className="flex items-center gap-3 group" prefetch={true}>
               <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                  <span className="text-white font-bold text-lg">F</span>
+                <div className="w-10 h-10 bg-white/20 rounded-lg p-1 shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-105">
+                  <Image
+                    src="/Website_logo-removebg-preview.png"
+                    alt="FunVault Logo"
+                    width={32}
+                    height={32}
+                    className="object-contain"
+                    priority
+                  />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full border-2 border-white"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-1.5 h-1.5 text-white" />
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-red-700 to-red-900 bg-clip-text text-transparent">FunVault</h1>
-                <p className="text-xs text-slate-500 hidden sm:block">Your Gaming Adventure Starts Here</p>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold text-white">
+                  FunVault
+                </span>
+                <span className="text-xs text-red-200 font-medium -mt-1 tracking-wide">Gaming & Anime</span>
               </div>
             </Link>
-          </div>
-          
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:flex items-center space-x-2 max-w-md w-full mx-4">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-              <Input
-                placeholder="Search articles..."
-                className="pl-10 bg-slate-50 border-slate-200 focus:bg-white focus:border-red-600 transition-all duration-200"
-              />
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-6">
+              {/* Navigation Links */}
+              <div className="flex items-center gap-1">
+                <Link 
+                  href="/" 
+                  className="px-4 py-2 text-white hover:text-red-200 transition-all duration-200 font-medium rounded-lg hover:bg-white/10"
+                  prefetch={true}
+                >
+                  Home
+                </Link>
+                
+                <Link 
+                  href="/about" 
+                  className="px-4 py-2 text-white hover:text-red-200 transition-all duration-200 font-medium rounded-lg hover:bg-white/10"
+                  prefetch={true}
+                >
+                  About
+                </Link>
+                
+                <Link 
+                  href="/contact" 
+                  className="px-4 py-2 text-white hover:text-red-200 transition-all duration-200 font-medium rounded-lg hover:bg-white/10"
+                  prefetch={true}
+                >
+                  Contact
+                </Link>
+                
+                {/* Categories Dropdown */}
+                <div className="relative group">
+                  <button className="px-4 py-2 text-white hover:text-red-200 transition-all duration-200 font-medium rounded-lg hover:bg-white/10 flex items-center gap-2">
+                    Categories
+                    <svg className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {/* Dropdown Menu */}
+                  <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-red-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                   <div className="p-3">
+                     <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
+                       <Sparkles className="w-3 h-3" />
+                       Explore Categories
+                     </div>
+                     <div className="space-y-1">
+                       {categories.map((category) => (
+                         <Link
+                           key={category.id}
+                           href={`/category/${category.slug}`}
+                           className="flex items-center gap-3 px-3 py-3 text-slate-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 group/item"
+                           prefetch={true}
+                         >
+                           <div className="w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg flex items-center justify-center text-sm font-bold text-red-700 group-hover/item:scale-110 transition-transform duration-200">
+                             {getCategoryEmoji(category.name)}
+                           </div>
+                           <div className="flex-1">
+                             <div className="font-semibold">{category.name}</div>
+                             <div className="text-xs text-slate-500 line-clamp-1">{category.description}</div>
+                           </div>
+                         </Link>
+                       ))}
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+                       {/* Mobile Menu Button */}
+            <div className="lg:hidden">
+              <button 
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 text-white hover:text-red-200 hover:bg-white/10 rounded-lg transition-all duration-200"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </button>
             </div>
           </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6">
-            <Link href="/" className="text-slate-700 hover:text-red-700 transition-colors font-medium relative group">
-              Home
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-700 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <details className="relative group">
-              <summary className="text-slate-700 hover:text-red-700 transition-colors font-medium inline-flex items-center gap-1 cursor-pointer list-none relative">
-                Games <span className="text-xs">▼</span>
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-700 group-hover:w-full transition-all duration-300"></span>
-              </summary>
-              <div className="absolute z-50 left-0 mt-2 w-48 p-2 rounded-xl bg-white shadow-xl border border-slate-200">
-                {categories.slice(0, 6).map((c) => (
-                  <Link 
-                    key={c.id} 
-                    href={`/category/${c.slug}`} 
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 transition-colors"
-                  >
-                    <span className="text-lg">{getCategoryEmoji(c)}</span>
-                    <div>
-                      <p className="font-medium text-sm">{c.name}</p>
-                      <p className="text-xs text-slate-500">{c.description}</p>
-                    </div>
-                  </Link>
-                ))}
-                <div className="border-t mt-2 pt-2">
-                  <Link href="#categories" className="block text-sm text-red-700 hover:text-red-800 font-medium">
-                    View All Categories →
-                  </Link>
-                </div>
-              </div>
-            </details>
-            <Link href="/about" className="text-slate-700 hover:text-red-700 transition-colors font-medium relative group">
-              About
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-700 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link href="/contact" className="text-slate-700 hover:text-red-700 transition-colors font-medium relative group">
-              Contact
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-700 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link href="#newsletter" className="inline-flex items-center rounded-full bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2 hover:from-red-700 hover:to-red-900 text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300">
-              Subscribe
-            </Link>
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <MobileNav categories={categories} />
         </div>
-      </div>
-    </header>
-  );
-}
+
+         {/* Mobile Menu */}
+         {isMobileMenuOpen && (
+           <div className="lg:hidden bg-red-800 border-t border-red-700">
+             <div className="container mx-auto px-4 py-4 space-y-2">
+               <Link 
+                 href="/" 
+                 className="block px-4 py-3 text-white hover:text-red-200 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+                 onClick={() => setIsMobileMenuOpen(false)}
+                 prefetch={true}
+               >
+                 Home
+               </Link>
+               <Link 
+                 href="/about" 
+                 className="block px-4 py-3 text-white hover:text-red-200 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+                 onClick={() => setIsMobileMenuOpen(false)}
+                 prefetch={true}
+               >
+                 About
+               </Link>
+               <Link 
+                 href="/contact" 
+                 className="block px-4 py-3 text-white hover:text-red-200 hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
+                 onClick={() => setIsMobileMenuOpen(false)}
+                 prefetch={true}
+               >
+                 Contact
+               </Link>
+               
+               {/* Mobile Categories */}
+               <div className="pt-2 border-t border-red-700">
+                 <div className="text-xs font-bold text-red-200 uppercase tracking-wider mb-3 px-4">
+                   Categories
+                 </div>
+                 <div className="space-y-1">
+                   {categories.map((category) => (
+                     <Link
+                       key={category.id}
+                       href={`/category/${category.slug}`}
+                       className="flex items-center gap-3 px-4 py-3 text-white hover:text-red-200 hover:bg-white/10 rounded-lg transition-all duration-200"
+                       onClick={() => setIsMobileMenuOpen(false)}
+                       prefetch={true}
+                     >
+                       <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center text-sm font-bold">
+                         {getCategoryEmoji(category.name)}
+                       </div>
+                       <span className="font-medium">{category.name}</span>
+                     </Link>
+                   ))}
+                 </div>
+               </div>
+             </div>
+           </div>
+         )}
+       </nav>
+     </>
+   );
+ }
 
 // Helper function for category emojis
-function getCategoryEmoji(category: Category): string {
+function getCategoryEmoji(categoryName: string): string {
   const emojiMap: { [key: string]: string } = {
     'Roblox': '🧱',
     'Minecraft': '⛏️',
-    'Anime': '🎌',
+    'Anime': '🌸',
     'Gaming': '🎯',
     'Technology': '💻',
     'Entertainment': '🎬'
   };
-  return emojiMap[category.name] || '🎮';
+  return emojiMap[categoryName] || '🎮';
 }

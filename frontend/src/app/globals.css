@@ -114,11 +114,22 @@
 }
 
 @layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    background-color: transparent !important;
+  }
+
+  body {
+    background-color: transparent !important;
+    @apply text-foreground font-sans;
+  }
+
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground font-sans;
   }
 }
 
@@ -150,4 +161,14 @@
   }
   
   /* Keep original colors, just better typography */
+  
+  /* Hide scrollbar but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
 }

@@ -9,6 +9,7 @@ import { TrendingUp, Clock, Eye, Zap, Shield, Smartphone, Sparkles, Menu, X } fr
 import { Carousel } from '@/components/ui/carousel';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
+import { HeroSearch } from '@/components/hero-search';
 
 // Types for our data
 interface Category {
@@ -39,15 +40,23 @@ interface Post {
   updated_at: string;
 }
 
-
-
 // Fetch blog data
 async function getBlogData() {
   try {
     const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
     const [postsRes, categoriesRes] = await Promise.all([
-      fetch(`${api}/posts`, { cache: 'no-store' }),
-      fetch(`${api}/categories`, { cache: 'no-store' })
+      fetch(`${api}/posts`, { 
+        next: { 
+          revalidate: 300, // Cache for 5 minutes
+          tags: ['posts', 'categories']
+        }
+      }),
+      fetch(`${api}/categories`, { 
+        next: { 
+          revalidate: 3600, // Cache for 1 hour
+          tags: ['categories']
+        }
+      })
     ]);
 
     if (!postsRes.ok || !categoriesRes.ok) {
@@ -82,15 +91,40 @@ export default async function HomePage() {
       <Navigation categories={categories} />
 
       {/* Hero Section - Magazine Style */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700 text-white">
+      <section className="relative bg-gradient-to-br from-red-900 via-red-800 to-red-700 text-white">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
           <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.1)_0%,transparent_50%)]"></div>
         </div>
         
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pb-20 lg:pb-24">
           <div className="max-w-4xl mx-auto text-center">
+            {/* Logo Section */}
+            <div className="flex items-center justify-center gap-3 mb-8 group">
+              <div className="relative">
+                <div className="w-16 h-16 bg-white/20 rounded-xl p-2 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                  <Image
+                    src="/Website_logo-removebg-preview.png"
+                    alt="FunVault Logo"
+                    width={48}
+                    height={48}
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-2 h-2 text-white" />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-bold text-white">
+                  FunVault
+                </span>
+                <span className="text-sm text-red-200 font-medium -mt-1 tracking-wide">Gaming & Anime</span>
+              </div>
+            </div>
+            
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8">
               <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
               <span className="text-sm font-medium">🔥 New: Latest Gaming Tips & Anime Reviews Just Added</span>
@@ -103,40 +137,31 @@ export default async function HomePage() {
               </span>
             </h1>
             
-            <p className="text-xl sm:text-2xl mb-8 text-slate-200 max-w-3xl mx-auto text-body">
+            <p className="text-xl sm:text-2xl mb-12 text-slate-200 max-w-3xl mx-auto text-body">
               Get exclusive Roblox tips, Minecraft redstone guides, and anime recommendations that actually work. 
               Join 10,000+ gamers and anime fans who&apos;ve already discovered amazing content with our proven guides.
             </p>
             
-            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
-              <Button asChild size="lg" className="bg-white text-red-900 hover:bg-slate-100 text-lg px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300">
-                <Link href="#featured">Get Free Tips Now</Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4 rounded-xl backdrop-blur-sm">
-                <Link href="#categories">See All Guides</Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4 rounded-xl backdrop-blur-sm">
-                <Link href="/#newsletter">Get Weekly Updates</Link>
-              </Button>
-            </div>
+            {/* Hero Search Component */}
+            <HeroSearch posts={posts} categories={categories} />
             
             {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl mx-auto mt-16">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">{posts.length}+</div>
-                <div className="text-sm text-slate-300">Articles</div>
+                <div className="text-3xl sm:text-4xl font-bold text-yellow-300 mb-2">{posts.length}+</div>
+                <div className="text-sm text-slate-300 font-medium">Articles</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-orange-300">{categories.length}</div>
-                <div className="text-sm text-slate-300">Categories</div>
+                <div className="text-3xl sm:text-4xl font-bold text-orange-300 mb-2">{categories.length}</div>
+                <div className="text-sm text-slate-300 font-medium">Categories</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-red-300">24/7</div>
-                <div className="text-sm text-slate-300">Updated</div>
+                <div className="text-3xl sm:text-4xl font-bold text-red-300 mb-2">24/7</div>
+                <div className="text-sm text-slate-300 font-medium">Updated</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-yellow-300">100%</div>
-                <div className="text-sm text-slate-300">Family Safe</div>
+                <div className="text-3xl sm:text-4xl font-bold text-yellow-300 mb-2">100%</div>
+                <div className="text-sm text-slate-300 font-medium">Family Safe</div>
               </div>
             </div>
           </div>
@@ -216,7 +241,7 @@ export default async function HomePage() {
                   </div>
                   
                   <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800 leading-tight">
-                    <Link href={`/post/${featuredPost.slug}`} className="hover:text-red-700 transition-colors">
+                    <Link href={`/post/${featuredPost.slug}`} className="hover:text-red-700 transition-colors" prefetch={true}>
                       {featuredPost.title}
                     </Link>
                   </h3>
@@ -295,20 +320,20 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <CardContent className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 mb-3 text-sm text-slate-500 flex-shrink-0">
+                    <div className="flex items-center gap-2 mb-3 text-sm text-slate-500">
                       <Clock className="h-4 w-4" />
                       <span>{new Date(post.published_at).toLocaleDateString()}</span>
                       <span>•</span>
                       <Eye className="h-4 w-4" />
                       <span>{post.view_count} views</span>
                     </div>
-                    <CardTitle className="text-xl mb-3 line-clamp-2 group-hover:text-red-700 transition-colors flex-shrink-0">
+                    <CardTitle className="text-xl mb-3 line-clamp-2 group-hover:text-red-700 transition-colors">
                       {post.title}
                     </CardTitle>
-                    <CardDescription className="line-clamp-3 mb-4 text-slate-600 flex-1">
+                    <CardDescription className="line-clamp-3 text-slate-600 flex-1">
                       {post.excerpt || post.content.substring(0, 120)}...
                     </CardDescription>
-                    <div className="text-red-700 hover:text-red-800 transition-colors font-medium mt-auto flex-shrink-0">
+                    <div className="text-red-700 hover:text-red-800 transition-colors font-medium mt-4">
                       Read More →
                     </div>
                   </CardContent>

@@ -13,6 +13,30 @@ export class PostsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {}
 
+  // Search posts by query
+  async search(query: string, limit: number = 10): Promise<Post[]> {
+    if (!query || query.trim().length === 0) {
+      return [];
+    }
+
+    const searchTerm = `%${query.trim()}%`;
+    
+    const posts = await this.postsRepository
+      .createQueryBuilder('post')
+      .leftJoinAndSelect('post.category', 'category')
+      .where('post.status = :status', { status: 'published' })
+      .andWhere(
+        '(post.title ILIKE :searchTerm OR post.content ILIKE :searchTerm OR post.excerpt ILIKE :searchTerm OR post.meta_title ILIKE :searchTerm OR post.meta_description ILIKE :searchTerm)',
+        { searchTerm }
+      )
+      .orderBy('post.view_count', 'DESC')
+      .addOrderBy('post.published_at', 'DESC')
+      .limit(limit)
+      .getMany();
+
+    return posts;
+  }
+
   // Get all published posts with caching. If forceRefresh is true, bypass cache.
   async findAll(forceRefresh = false): Promise<Post[]> {
     if (!forceRefresh) {

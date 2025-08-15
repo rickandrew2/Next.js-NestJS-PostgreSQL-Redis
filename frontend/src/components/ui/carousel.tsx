@@ -53,7 +53,7 @@ export function Carousel({
       <div
         ref={trackRef}
         className={cn(
-          "flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 px-2 md:px-10",
+          "flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 px-2 md:px-10 scrollbar-hide",
           "[&>*]:snap-start"
         )}
       >

@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import ArticleSidebar from '@/components/article-sidebar';
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
 
 interface Post {
   id: number;
@@ -28,13 +30,26 @@ interface Category {
   slug: string;
   description: string;
   image_url?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 async function getPostData(slug: string): Promise<{ post: Post | null; categories: Category[] }> {
   try {
+    const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
     const [postRes, categoriesRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/slug/${slug}`, { cache: 'no-store' }),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, { cache: 'no-store' })
+      fetch(`${api}/posts/slug/${slug}`, { 
+        next: { 
+          revalidate: 600, // Cache for 10 minutes
+          tags: ['posts', `post-${slug}`]
+        }
+      }),
+      fetch(`${api}/categories`, { 
+        next: { 
+          revalidate: 3600, // Cache for 1 hour
+          tags: ['categories']
+        }
+      })
     ]);
 
     if (!postRes.ok || !categoriesRes.ok) {
@@ -55,7 +70,13 @@ async function getPostData(slug: string): Promise<{ post: Post | null; categorie
 
 async function getRelatedPosts(categoryId: number, currentPostId: number): Promise<Post[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, { cache: 'no-store' });
+    const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+    const res = await fetch(`${api}/posts`, { 
+      next: { 
+        revalidate: 300, // Cache for 5 minutes
+        tags: ['posts']
+      }
+    });
     if (!res.ok) return [];
     
     const posts = await res.json();
@@ -70,7 +91,13 @@ async function getRelatedPosts(categoryId: number, currentPostId: number): Promi
 
 async function getPopularPosts(currentPostId: number): Promise<Post[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, { cache: 'no-store' });
+    const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+    const res = await fetch(`${api}/posts`, { 
+      next: { 
+        revalidate: 300, // Cache for 5 minutes
+        tags: ['posts']
+      }
+    });
     if (!res.ok) return [];
     
     const posts = await res.json();
@@ -103,28 +130,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-red-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/50 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-red-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">F</span>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-red-700 to-red-900 bg-clip-text text-transparent">
-                FunVault
-              </span>
-            </Link>
-            
-            <Button variant="ghost" asChild className="text-slate-700 hover:text-red-700">
-              <Link href="/">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Navigation categories={categories} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
@@ -345,6 +351,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </div>
         </div>
       </div>
+      <Footer categories={categories} />
     </div>
   );
 }

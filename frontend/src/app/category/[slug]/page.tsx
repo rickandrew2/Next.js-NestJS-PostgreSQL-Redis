@@ -5,6 +5,8 @@ import { ArrowLeft, Clock, Eye, Grid3X3, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Navigation } from '@/components/navigation';
+import { Footer } from '@/components/footer';
 
 interface Post {
   id: number;
@@ -25,13 +27,26 @@ interface Category {
   slug: string;
   description: string;
   image_url?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 async function getCategoryData(slug: string): Promise<{ category: Category | null; posts: Post[]; categories: Category[] }> {
   try {
+    const api = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
     const [categoriesRes, postsRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, { cache: 'no-store' }),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, { cache: 'no-store' })
+      fetch(`${api}/categories`, { 
+        next: { 
+          revalidate: 3600, // Cache for 1 hour
+          tags: ['categories']
+        }
+      }),
+      fetch(`${api}/posts`, { 
+        next: { 
+          revalidate: 300, // Cache for 5 minutes
+          tags: ['posts']
+        }
+      })
     ]);
 
     if (!categoriesRes.ok || !postsRes.ok) {
@@ -49,7 +64,12 @@ async function getCategoryData(slug: string): Promise<{ category: Category | nul
     }
 
     // Use the category-specific endpoint for better performance
-    const categoryPostsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/category/${category.id}`, { cache: 'no-store' });
+    const categoryPostsRes = await fetch(`${api}/posts/category/${category.id}`, { 
+      next: { 
+        revalidate: 300, // Cache for 5 minutes
+        tags: ['posts', `category-${category.id}`]
+      }
+    });
     if (categoryPostsRes.ok) {
       const categoryPosts = await categoryPostsRes.json();
       return { category, posts: categoryPosts, categories };
@@ -87,28 +107,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-red-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/50 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-red-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">F</span>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-red-700 to-red-900 bg-clip-text text-transparent">
-                FunVault
-              </span>
-            </Link>
-            
-            <Button variant="ghost" asChild className="text-slate-700 hover:text-red-700">
-              <Link href="/">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <Navigation categories={categories} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
@@ -171,7 +170,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           <div className="mb-12">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post) => (
-                <Card key={post.id} className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden">
+                <Card key={post.id} className="group hover:shadow-2xl transition-all duration-500 border-0 shadow-lg overflow-hidden h-[500px] flex flex-col">
                   <Link href={`/post/${post.slug}`}>
                     <div className="relative h-48 overflow-hidden">
                       {post.featured_image ? (
@@ -197,27 +196,27 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                       </div>
                     </div>
                     
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-2 mb-3 text-sm text-slate-500">
-                        <Clock className="h-4 w-4" />
-                        <span>{new Date(post.published_at).toLocaleDateString()}</span>
-                        <span>•</span>
-                        <Eye className="h-4 w-4" />
-                        <span>{post.view_count} views</span>
-                      </div>
-                      
-                      <CardTitle className="text-xl mb-3 line-clamp-2 group-hover:text-red-700 transition-colors">
-                        {post.title}
-                      </CardTitle>
-                      
-                      <p className="text-slate-600 mb-4 line-clamp-3">
-                        {post.excerpt || post.content.substring(0, 120)}...
-                      </p>
-                      
-                      <div className="text-red-700 hover:text-red-800 transition-colors font-medium">
-                        Read More →
-                      </div>
-                    </CardContent>
+                                         <CardContent className="p-6 flex-1 flex flex-col">
+                       <div className="flex items-center gap-2 mb-3 text-sm text-slate-500">
+                         <Clock className="h-4 w-4" />
+                         <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                         <span>•</span>
+                         <Eye className="h-4 w-4" />
+                         <span>{post.view_count} views</span>
+                       </div>
+                       
+                       <CardTitle className="text-xl mb-3 line-clamp-2 group-hover:text-red-700 transition-colors">
+                         {post.title}
+                       </CardTitle>
+                       
+                       <p className="text-slate-600 line-clamp-3 mb-4">
+                         {post.excerpt || post.content.substring(0, 120)}...
+                       </p>
+                       
+                       <div className="text-red-700 hover:text-red-800 transition-colors font-medium mt-auto">
+                         Read More →
+                       </div>
+                     </CardContent>
                   </Link>
                 </Card>
               ))}
@@ -293,6 +292,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           </Button>
         </section>
       </div>
+      <Footer categories={categories} />
     </div>
   );
 }
