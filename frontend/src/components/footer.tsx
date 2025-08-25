@@ -72,6 +72,9 @@ export function Footer({ categories = [] }: FooterProps) {
               <li><Link href="/about" className="text-slate-400 hover:text-red-400 transition-colors">About</Link></li>
               <li><Link href="/contact" className="text-slate-400 hover:text-red-400 transition-colors">Contact</Link></li>
               <li><Link href="/privacy-policy" className="text-slate-400 hover:text-red-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms-of-service" className="text-slate-400 hover:text-red-400 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/cookie-policy" className="text-slate-400 hover:text-red-400 transition-colors">Cookie Policy</Link></li>
+              <li><Link href="/disclaimer" className="text-slate-400 hover:text-red-400 transition-colors">Disclaimer</Link></li>
             </ul>
           </div>
           <div>

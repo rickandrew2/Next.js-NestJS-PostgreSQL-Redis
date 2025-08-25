@@ -10,6 +10,7 @@ import { Carousel } from '@/components/ui/carousel';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { HeroSearch } from '@/components/hero-search';
+import { StructuredData } from '@/components/structured-data';
 
 // Types for our data
 interface Category {
@@ -88,6 +89,8 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-red-50">
+      <StructuredData type="website" data={{}} />
+      <StructuredData type="organization" data={{}} />
       <Navigation categories={categories} />
 
       {/* Hero Section - Magazine Style */}

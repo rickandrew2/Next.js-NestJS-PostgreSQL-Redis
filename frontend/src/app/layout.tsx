@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { PerformanceMonitor } from "@/components/performance-monitor";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -94,9 +95,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics - FunVault Tracking */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-6LLSMQWB68"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-6LLSMQWB68');
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable} antialiased bg-transparent`}
       >
+        <PerformanceMonitor />
         {children}
       </body>
     </html>

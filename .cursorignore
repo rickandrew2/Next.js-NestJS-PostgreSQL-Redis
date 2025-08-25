@@ -1,2 +1,28 @@
+# Keep environment files
 !*.env
 !*.env.local
+
+# Ignore build artifacts
+backend/dist
+frontend/.next
+frontend/out
+**/*.map
+**/*.tsbuildinfo
+
+# Ignore dependencies
+node_modules
+backend/node_modules
+frontend/node_modules
+
+# Ignore git & system files
+.git
+.gitignore
+.DS_Store
+
+# Ignore deployment & CI/CD files
+railway.json
+.railwayignore
+backend/.railwayignore
+
+# Ignore logs & temporary files
+*.log
