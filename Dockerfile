@@ -14,9 +14,9 @@ RUN npm ci
 WORKDIR /app
 COPY . .
 
-# Build the backend
+# Build the backend using node to run TypeScript
 WORKDIR /app/backend
-RUN npm run build
+RUN node node_modules/typescript/bin/tsc
 
 # Production stage
 FROM node:18-alpine
